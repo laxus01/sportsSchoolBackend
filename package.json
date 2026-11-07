@@ -1,0 +1,23 @@
+{
+  "name": "sports-school-licensing-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --env-file-if-exists=.env --watch src/server.js",
+    "test": "node --test",
+    "check": "node scripts/check-syntax.js && node --test",
+    "db:migrate": "node --env-file-if-exists=.env src/db/migrate.js",
+    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "pg": "^8.16.3"
+  }
+}
