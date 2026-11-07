@@ -71,19 +71,18 @@ export function loadAppConfig(
       !env.DB_USERNAME ||
       !env.DB_PASSWORD ||
       !env.DB_DATABASE ||
-      !parseBoolean(env.DB_SSL) ||
       !allowedOrigins.length ||
       adminJwtSecret.toLowerCase().includes('replace')
     ) {
       throw new Error(
-        'Production requires MySQL credentials, DB_SSL=true, CORS origins, and real secrets',
+        'Production requires MySQL credentials, CORS origins, and real secrets',
       );
     }
   }
 
   return {
     nodeEnv,
-    host: env.HOST ?? '127.0.0.1',
+    host: env.HOST ?? '0.0.0.0',
     port,
     dbHost: env.DB_HOST ?? '127.0.0.1',
     dbPort,
