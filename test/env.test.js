@@ -19,6 +19,18 @@ test('configuration parses PostgreSQL URL and allowed origins', () => {
     'capacitor://localhost',
   ]);
   assert.equal(config.databaseSsl, false);
+  assert.equal(config.databaseSslRejectUnauthorized, true);
+  assert.equal(config.trustProxyHops, 0);
+});
+
+test('configuration supports Railway proxy and self-signed database certificates', () => {
+  const config = loadConfig({
+    ...validEnvironment,
+    DATABASE_SSL_REJECT_UNAUTHORIZED: 'false',
+    TRUST_PROXY_HOPS: '1',
+  });
+  assert.equal(config.databaseSslRejectUnauthorized, false);
+  assert.equal(config.trustProxyHops, 1);
 });
 
 test('production requires HTTPS, database TLS and explicit CORS origins', () => {

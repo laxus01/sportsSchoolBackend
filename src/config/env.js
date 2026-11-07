@@ -6,14 +6,22 @@ const parseBoolean = (value, fallback = false) => {
 export function loadConfig(env = process.env) {
   const nodeEnv = env.NODE_ENV ?? 'development';
   const port = Number(env.PORT ?? 3001);
+  const trustProxyHops = Number(env.TRUST_PROXY_HOPS ?? 0);
   const challengeTtlSeconds = Number(env.DEVICE_CHALLENGE_TTL_SECONDS ?? 300);
   const activationCodeTtlHours = Number(env.ACTIVATION_CODE_TTL_HOURS ?? 72);
   const adminJwtSecret = env.ADMIN_JWT_SECRET ?? '';
   const databaseUrl = env.DATABASE_URL ?? '';
+  const databaseSslRejectUnauthorized = parseBoolean(
+    env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+    true,
+  );
   const licenseIssuer = env.LICENSE_ISSUER ?? '';
 
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     throw new Error('PORT must be an integer from 1 to 65535');
+  }
+  if (!Number.isInteger(trustProxyHops) || trustProxyHops < 0) {
+    throw new Error('TRUST_PROXY_HOPS must be a non-negative integer');
   }
   if (!Number.isInteger(challengeTtlSeconds) || challengeTtlSeconds < 30) {
     throw new Error('DEVICE_CHALLENGE_TTL_SECONDS must be at least 30');
@@ -56,8 +64,10 @@ export function loadConfig(env = process.env) {
     nodeEnv,
     host: env.HOST ?? '127.0.0.1',
     port,
+    trustProxyHops,
     databaseUrl,
     databaseSsl: parseBoolean(env.DATABASE_SSL),
+    databaseSslRejectUnauthorized,
     allowedOrigins,
     adminJwtSecret,
     licenseIssuer,

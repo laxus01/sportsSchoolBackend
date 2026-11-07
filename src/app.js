@@ -15,6 +15,7 @@ import {
 
 export function createApp({ pool, config, privateKey }) {
   const app = express();
+  app.set('trust proxy', config.trustProxyHops ?? 0);
   const adminService = createAdminService({ pool, config });
   const deviceService = createDeviceService({
     pool,

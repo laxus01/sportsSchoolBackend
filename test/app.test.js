@@ -37,6 +37,7 @@ test('Express API serves health checks and protects admin routes', async (t) => 
       licenseAudience: 'SPORTS_SCHOOL',
       licenseIssuer: 'https://licenses.example.test',
       licenseSigningKeyId: 'test-key',
+      trustProxyHops: 1,
     },
   });
   const server = app.listen(0, '127.0.0.1');
@@ -50,7 +51,9 @@ test('Express API serves health checks and protects admin routes', async (t) => 
   const address = server.address();
   const baseUrl = `http://127.0.0.1:${address.port}`;
 
-  const live = await fetch(`${baseUrl}/health/live`);
+  const live = await fetch(`${baseUrl}/health/live`, {
+    headers: { 'X-Forwarded-For': '203.0.113.10' },
+  });
   assert.equal(live.status, 200);
   assert.deepEqual(await live.json(), { status: 'ok' });
 
